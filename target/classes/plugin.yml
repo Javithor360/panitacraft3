@@ -1,0 +1,5 @@
+name: Panitacraft3
+version: '1.0'
+main: com.panita.panitacraft3.Panitacraft
+api-version: '1.21'
+authors: [Javithor360]
