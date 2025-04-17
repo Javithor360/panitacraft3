@@ -55,6 +55,9 @@ public class ShareCoordinatesCommand implements AdvancedCommand, TabSuggestingCo
             if (target == null || !target.isOnline()) {
                 Messenger.prefixedSend(sender, "<red>El jugador <gray>" + args[0] + "</gray> no está conectado.</red>");
                 return;
+            } else if (target == player) {
+                Messenger.prefixedSend(sender, "<gray>Tus coordenadas son:</gray> <aqua>X: " + x + " Y: " + y + " Z: " + z + "</aqua> " + dim);
+                return;
             }
 
             Messenger.prefixedSend(target, message); // Send it to target
