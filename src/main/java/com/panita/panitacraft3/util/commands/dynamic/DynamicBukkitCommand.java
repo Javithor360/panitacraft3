@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Represents a dynamic command in Bukkit, which can have both a main command and subcommands.
@@ -103,7 +104,19 @@ public class DynamicBukkitCommand extends Command implements TabCompleter, Comma
 
         // If there are no arguments, suggest the main subcommands
         if (consumed == args.length - 1 && !currentMeta.getSubCommands().isEmpty()) {
-            StringUtil.copyPartialMatches(args[args.length - 1], currentMeta.getSubCommands().keySet(), suggestions);
+            String input = args[args.length - 1].toLowerCase();
+
+            suggestions.addAll(
+                    currentMeta.getSubCommands().entrySet().stream()
+                            .filter(entry -> {
+                                String perm = entry.getValue().getPermission();
+                                return perm == null || perm.isEmpty() || sender.hasPermission(perm);
+                            })
+                            .map(Map.Entry::getKey)
+                            .filter(cmd -> cmd.startsWith(input))
+                            .toList()
+            );
+
             return suggestions;
         }
 

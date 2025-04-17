@@ -25,7 +25,7 @@ import java.util.*;
 public class CommandRegistry {
     private final JavaPlugin plugin;
     // Map to hold subcommands for each command
-    private final Map<String, CommandMeta> rootCommands = new HashMap<>();
+    private static final Map<String, CommandMeta> rootCommands = new HashMap<>();
 
     /**
      * Constructor for CommandRegistry.
@@ -34,6 +34,16 @@ public class CommandRegistry {
      */
     public CommandRegistry(JavaPlugin plugin) {
         this.plugin = plugin;
+    }
+
+    /**
+     * Retrieves the root command metadata for a given command name.
+     *
+     * @param name The name of the command.
+     * @return The CommandMeta instance for the command, or null if not found.
+     */
+    public static CommandMeta getRootCommand(String name) {
+        return rootCommands.get(name.toLowerCase());
     }
 
     /**
@@ -137,6 +147,7 @@ public class CommandRegistry {
             // Create a new PluginCommand instance for Tab Completion
             PluginCommand pluginCommand = createPluginCommand(name, plugin);
             pluginCommand.setExecutor(dynamicCommand);
+            pluginCommand.setPermission(meta.getPermission());
             pluginCommand.setTabCompleter(dynamicCommand);
             pluginCommand.setAliases(aliases != null ? aliases : new ArrayList<>());
 
