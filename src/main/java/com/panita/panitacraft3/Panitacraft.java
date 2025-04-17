@@ -1,22 +1,22 @@
 package com.panita.panitacraft3;
 
+import com.panita.panitacraft3.util.commands.CommandRegistry;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.logging.Logger;
-
 public final class Panitacraft extends JavaPlugin {
-
-    private final Logger logger = getLogger();
 
     @Override
     public void onEnable() {
         // Plugin startup logic
-        logger.info("Panitacraft is starting up!");
+        getLogger().info("Panitacraft is starting up!");
+
+        // Register commands
+        new CommandRegistry(this).registerAll("com.panita.panitacraft3.chat.commands");
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        logger.info("Panitacraft is shutting down!");
+        getLogger().info("Panitacraft is shutting down!");
     }
 }
