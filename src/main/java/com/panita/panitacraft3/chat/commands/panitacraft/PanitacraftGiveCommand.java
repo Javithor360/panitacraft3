@@ -1,5 +1,6 @@
 package com.panita.panitacraft3.chat.commands.panitacraft;
 
+import com.panita.panitacraft3.util.chat.Messenger;
 import com.panita.panitacraft3.util.commands.dynamic.AdvancedCommand;
 import com.panita.panitacraft3.util.commands.dynamic.TabSuggestingCommand;
 import com.panita.panitacraft3.util.commands.identifiers.CommandMeta;
@@ -11,7 +12,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @SubCommandSpec(
@@ -25,7 +25,7 @@ public class PanitacraftGiveCommand implements AdvancedCommand, TabSuggestingCom
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (args.length < 2) {
-            sender.sendMessage("Uso correcto: /panitacraft give <player> <item>");
+            Messenger.prefixedBroadcast("&aUso: &6/panitacraft give <jugador> <material>");
             return;
         }
 
@@ -34,18 +34,18 @@ public class PanitacraftGiveCommand implements AdvancedCommand, TabSuggestingCom
         Player target = Bukkit.getPlayer(playerName);
 
         if (target == null) {
-            sender.sendMessage("❌ El jugador '" + playerName + "' no está conectado.");
+            Messenger.prefixedSend(sender, "&cEl jugador &4'" + playerName + "' &cno está conectado.");
             return;
         }
 
         Material material = Material.matchMaterial(itemName);
         if (material == null) {
-            sender.sendMessage("❌ El material '" + itemName + "' no existe.");
+            Messenger.prefixedSend(sender, "&cEl material &4'" + itemName + "' &cno es válido.");
             return;
         }
 
         target.getInventory().addItem(new ItemStack(material));
-        sender.sendMessage("✅ Le diste " + material + " a " + target.getName());
+        Messenger.prefixedSend(sender, "&aHas dado a &e" + playerName + " &aun &e" + itemName + "&a.");
     }
 
     @Override
@@ -61,9 +61,10 @@ public class PanitacraftGiveCommand implements AdvancedCommand, TabSuggestingCom
         meta.setArgumentSuggestion(1, context -> {
             String current = context.getCurrentArg().toLowerCase();
             return Arrays.stream(Material.values())
+                    .filter(Material::isItem)
                     .map(Material::name)
                     .filter(name -> name.toLowerCase().startsWith(current))
-                    .limit(20)
+                    .limit(50)
                     .collect(Collectors.toList());
         });
     }
