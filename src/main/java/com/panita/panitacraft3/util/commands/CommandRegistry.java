@@ -1,6 +1,7 @@
 package com.panita.panitacraft3.util.commands;
 
 import com.panita.panitacraft3.util.commands.dynamic.DynamicBukkitCommand;
+import com.panita.panitacraft3.util.commands.dynamic.TabSuggestingCommand;
 import com.panita.panitacraft3.util.commands.identifiers.CommandMeta;
 import com.panita.panitacraft3.util.commands.identifiers.CommandSpec;
 import com.panita.panitacraft3.util.commands.identifiers.SubCommandSpec;
@@ -78,6 +79,11 @@ public class CommandRegistry {
                 // Instance to hold the command metadata
                 CommandMeta meta = new CommandMeta(cmd, spec.permission(), spec.playerOnly(), spec.syntax(), spec.description());
 
+                // Check if the command implements TabSuggestingCommand
+                if (cmd instanceof TabSuggestingCommand suggesting) {
+                    suggesting.applySuggestions(meta); // Apply tab suggestions to the command
+                }
+
                 // Get a full path of the command
                 String[] path = (spec.parent() + " " + spec.name()).toLowerCase().split(" ");
                 if (path.length < 2) {
@@ -134,9 +140,18 @@ public class CommandRegistry {
         }
     }
 
+    /**
+     * Creates a new PluginCommand instance for the specified command name and plugin.
+     *
+     * @param name The name of the command.
+     * @param plugin The JavaPlugin instance to associate with the command.
+     * @return A new PluginCommand instance.
+     * @throws Exception If an error occurs during instantiation.
+     */
     private PluginCommand createPluginCommand(String name, JavaPlugin plugin) throws Exception {
+        // Gets the constructor of PluginCommand
         Constructor<PluginCommand> constructor = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
         constructor.setAccessible(true);
-        return constructor.newInstance(name, plugin);
+        return constructor.newInstance(name, plugin); // Create a new instance of PluginCommand
     }
 }

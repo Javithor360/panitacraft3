@@ -1,6 +1,7 @@
 package com.panita.panitacraft3.util.commands.identifiers;
 
 import com.panita.panitacraft3.util.commands.dynamic.AdvancedCommand;
+import com.panita.panitacraft3.util.commands.dynamic.SuggestionProvider;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -18,6 +19,7 @@ public class CommandMeta {
     private final String description;
     private final Map<String, CommandMeta> subCommands = new HashMap<>();
     private final List<String> arguments = new ArrayList<>();
+    private final Map<Integer, SuggestionProvider> argumentSuggestions = new HashMap<>();
 
     /**
      * Constructor for CommandMeta.
@@ -108,16 +110,11 @@ public class CommandMeta {
         return subCommands.get(name);
     }
 
-    public List<String> getArguments() {
-        return arguments;
+    public void setArgumentSuggestion(int index, SuggestionProvider provider) {
+        argumentSuggestions.put(index, provider);
     }
 
-    /**
-     * Adds an argument to the list of arguments for this command.
-     *
-     * @param argument The argument to add.
-     */
-    public void addArgument(String argument) {
-        this.arguments.add(argument);
+    public SuggestionProvider getSuggestionProvider(int index) {
+        return argumentSuggestions.get(index);
     }
 }

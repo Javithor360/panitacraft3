@@ -85,32 +85,61 @@ public class DynamicBukkitCommand extends Command implements TabCompleter, Comma
      */
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        System.out.println("TabComplete Invoked for command: " + label);
-        List<String> suggestions = new ArrayList<>();
+        List<String> suggestions = new ArrayList<>(); // List to hold suggestions
+        CommandMeta currentMeta = rootMeta; // Start with the root command metadata
+        int consumed = 0; // Number of arguments consumed
 
-        if (args.length == 1) {
-            // If there is only one argument, suggest the subcommands of the root command
-            StringUtil.copyPartialMatches(args[0], rootMeta.getSubCommands().keySet(), suggestions);
-        } else {
-            // Recursive call to get suggestions for subcommands
-            CommandMeta currentMeta = rootMeta;
-            for (int i = 0; i < args.length - 1; i++) {
-                currentMeta = currentMeta.getSubCommands().get(args[i].toLowerCase());
-                if (currentMeta == null) break; // No more subcommands available
-            }
-
-            if (currentMeta != null) {
-                StringUtil.copyPartialMatches(args[args.length - 1], currentMeta.getSubCommands().keySet(), suggestions);
+        // Iterate through the arguments and check for subcommands
+        for (int i = 0; i < args.length; i++) {
+            String arg = args[i].toLowerCase();
+            if (currentMeta.getSubCommands().containsKey(arg)) { // Check if the argument matches a subcommand
+                currentMeta = currentMeta.getSubCommands().get(arg); // Update the current meta to the subcommand
+                consumed++;
+            } else {
+                break; // If the argument does not match a subcommand, break the loop
             }
         }
+
+        // If there are no arguments, suggest the main subcommands
+        if (consumed == args.length - 1 && !currentMeta.getSubCommands().isEmpty()) {
+            StringUtil.copyPartialMatches(args[args.length - 1], currentMeta.getSubCommands().keySet(), suggestions);
+            return suggestions;
+        }
+
+        // If there are arguments, suggest the next argument based on the current meta
+        TabContext context = new TabContext(sender, args, consumed, currentMeta);
+        SuggestionProvider provider = currentMeta.getSuggestionProvider(context.getArgumentIndex());
+
+        if (provider != null) {
+            suggestions.addAll(provider.suggest(context));
+        }
+
         return suggestions;
     }
 
+
+    /**
+     * Handles the command execution.
+     *
+     * @param sender The command sender (e.g., a player).
+     * @param command The command being executed.
+     * @param label The label of the command.
+     * @param args The arguments passed to the command.
+     * @return true if the command was executed successfully; false otherwise.
+     */
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         return execute(sender, label, args);
     }
 
+    /**
+     * Executes the command and checks for errors.
+     *
+     * @param sender The command sender (e.g., a player).
+     * @param currentMeta The current command metadata.
+     * @param args The arguments passed to the command.
+     * @return true if the command was executed successfully; false otherwise.
+     */
     private boolean executeMetaCommand(CommandSender sender, CommandMeta currentMeta, String[] args) {
         String errorCode = currentMeta.check(sender);
 
@@ -127,6 +156,13 @@ public class DynamicBukkitCommand extends Command implements TabCompleter, Comma
         return true;
     }
 
+    /**
+     * Sends an error message to the command sender.
+     *
+     * @param sender The command sender (e.g., a player).
+     * @param type The type of error message to send.
+     * @return true if the error message was sent successfully; false otherwise.
+     */
     private boolean sendErrorMessage(CommandSender sender, String type) {
         switch (type) {
             case "invalid_command":
