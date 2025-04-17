@@ -61,7 +61,7 @@
             <groupId>net.kyori</groupId>
             <artifactId>adventure-platform-bukkit</artifactId>
             <version>4.3.4</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
 
         <!-- List all the classes on runtime -->
