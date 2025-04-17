@@ -1,5 +1,6 @@
 package com.panita.panitacraft3.chat.commands;
 
+import com.panita.panitacraft3.util.CommandUtils;
 import com.panita.panitacraft3.util.chat.Messenger;
 import com.panita.panitacraft3.util.commands.dynamic.AdvancedCommand;
 import com.panita.panitacraft3.util.commands.dynamic.TabSuggestingCommand;
@@ -20,10 +21,7 @@ import java.util.stream.Stream;
 public class BroadcastCommand implements AdvancedCommand, TabSuggestingCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if (args.length == 0) {
-            Messenger.prefixedSend(sender, "&cUso: &4/broadcast <mensaje>"); // Corrected spelling
-            return;
-        }
+        if (!CommandUtils.checkArgsOrUsage(sender, args, 1, this.getClass())) return;
 
         boolean usePrefix = true; // Default to prefixed
         String message; // Default message

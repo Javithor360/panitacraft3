@@ -1,5 +1,6 @@
 package com.panita.panitacraft3.chat.commands.panitacraft;
 
+import com.panita.panitacraft3.util.CommandUtils;
 import com.panita.panitacraft3.util.chat.Messenger;
 import com.panita.panitacraft3.util.commands.dynamic.AdvancedCommand;
 import com.panita.panitacraft3.util.commands.dynamic.TabSuggestingCommand;
@@ -25,10 +26,7 @@ public class GiveCommand implements AdvancedCommand, TabSuggestingCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if (args.length < 2) {
-            Messenger.prefixedBroadcast("&aUso: &6/panitacraft give <jugador> <material>");
-            return;
-        }
+        if (!CommandUtils.checkArgsOrUsage(sender, args, 2, this.getClass())) return;
 
         String playerName = args[0];
         String itemName = args[1];
