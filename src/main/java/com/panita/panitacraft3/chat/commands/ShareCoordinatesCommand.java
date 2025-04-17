@@ -5,15 +5,12 @@ import com.panita.panitacraft3.util.commands.dynamic.AdvancedCommand;
 import com.panita.panitacraft3.util.commands.dynamic.TabSuggestingCommand;
 import com.panita.panitacraft3.util.commands.identifiers.CommandMeta;
 import com.panita.panitacraft3.util.commands.identifiers.CommandSpec;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Arrays;
 import java.util.stream.Collectors;
 
 @CommandSpec(
@@ -23,7 +20,7 @@ import java.util.stream.Collectors;
         aliases = {"c", "coords"},
         playerOnly = true
 )
-public class ShareCoordinates implements AdvancedCommand, TabSuggestingCommand {
+public class ShareCoordinatesCommand implements AdvancedCommand, TabSuggestingCommand {
 
     private final MiniMessage miniMessage = MiniMessage.miniMessage();
 

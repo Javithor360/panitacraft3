@@ -10,10 +10,9 @@ import org.bukkit.command.CommandSender;
         description = "Displays help information for Panitacraft commands.",
         syntax = "/panitacraft help"
 )
-public class PanitacraftHelpCommand implements AdvancedCommand {
+public class HelpCommand implements AdvancedCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
-        sender.sendMessage("Lista de comandos:");
-        sender.sendMessage(" - /panitacraft help");
+
     }
 }

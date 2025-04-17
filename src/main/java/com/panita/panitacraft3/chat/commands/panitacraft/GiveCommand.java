@@ -18,9 +18,10 @@ import java.util.stream.Collectors;
         parent = "panitacraft",
         name = "give",
         description = "Gives an item to a player.",
-        syntax = "/panitacraft give <player> <item>"
+        syntax = "/panitacraft give <player> <item>",
+        permission = "panitacraft.admin.command.panitacraft.give"
 )
-public class PanitacraftGiveCommand implements AdvancedCommand, TabSuggestingCommand {
+public class GiveCommand implements AdvancedCommand, TabSuggestingCommand {
 
     @Override
     public void execute(CommandSender sender, String[] args) {

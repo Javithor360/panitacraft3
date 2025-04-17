@@ -1,6 +1,7 @@
 package com.panita.panitacraft3.util.commands.dynamic;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.panita.panitacraft3.util.chat.Messenger;
 import com.panita.panitacraft3.util.commands.identifiers.CommandMeta;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -166,19 +167,19 @@ public class DynamicBukkitCommand extends Command implements TabCompleter, Comma
     private boolean sendErrorMessage(CommandSender sender, String type) {
         switch (type) {
             case "invalid_command":
-                sender.sendMessage("Comando inválido");
+                Messenger.prefixedSend(sender,"&7Comando inválido");
                 break;
             case "invalid_arguments":
-                sender.sendMessage("Argumentos inválidos");
+                Messenger.prefixedSend(sender, "&7Argumentos inválidos");
                 break;
             case "no_permission":
-                sender.sendMessage("No tienes permiso de ejecutar este comando");
+                Messenger.prefixedSend(sender,"&cNo tienes permiso de ejecutar este comando");
                 break;
             case "player_only":
-                sender.sendMessage("Este comando solo puede ser ejecutado por un jugador");
+                Messenger.consoleSend(sender,"Este comando solo puede ser ejecutado por un jugador");
                 break;
             default:
-                sender.sendMessage("Error desconocido");
+                Messenger.prefixedSend(sender,"&cError desconocido");
         }
         return true;
     }
