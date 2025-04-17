@@ -7,7 +7,6 @@ import com.panita.panitacraft3.util.commands.identifiers.SubCommandSpec;
 import com.panita.panitacraft3.util.commands.dynamic.AdvancedCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.reflections.Reflections;
 
@@ -22,7 +21,7 @@ import java.util.*;
 public class CommandRegistry {
     private final JavaPlugin plugin;
     // Map to hold subcommands for each command
-    private final Map<String, Map<String, CommandMeta>> subCommands = new HashMap<>();
+    private final Map<String, CommandMeta> rootCommands = new HashMap<>();
 
     /**
      * Constructor for CommandRegistry.
@@ -48,22 +47,6 @@ public class CommandRegistry {
         // Get all classes annotated with @SubCommandSpec (subcommands)
         Set<Class<?>> subCommandClasses = reflections.getTypesAnnotatedWith(SubCommandSpec.class);
 
-        // First, register all subcommands grouped by their parent command
-        for (Class<?> clazz : subCommandClasses) {
-            try {
-                // Check if the class is annotated with @SubCommandSpec
-                SubCommandSpec spec = clazz.getAnnotation(SubCommandSpec.class);
-                // Check if the class implements AdvancedCommand
-                AdvancedCommand cmd = (AdvancedCommand) clazz.getDeclaredConstructor().newInstance();
-
-                // Register the subcommand in the map, using the parent command name as the key
-                subCommands.computeIfAbsent(spec.parent(), k -> new HashMap<>())
-                        .put(spec.name().toLowerCase(), new CommandMeta(cmd, spec.permission(), spec.playerOnly(), spec.syntax(), spec.description()));
-            } catch (Exception e) {
-                plugin.getLogger().warning("[ERROR] Error in subcommand: " + e.getMessage());
-            }
-        }
-
         // Then register the main commands
         for (Class<?> clazz : rootCommandClasses) {
             try {
@@ -74,20 +57,46 @@ public class CommandRegistry {
                 // Instance to hold the command metadata
                 CommandMeta meta = new CommandMeta(cmd, spec.permission(), spec.playerOnly(), spec.syntax(), spec.description());
 
-                // Check if the command has subcommands
-                boolean hasSubs = subCommands.containsKey(spec.name());
-
-                if (hasSubs) {
-                    // Register the command with its subcommands
-                    registerBukkitCommand(spec.name(), meta, subCommands.get(spec.name()), spec.aliases());
-                    plugin.getLogger().info("[INFO] Registered root command with subcommands: /" + spec.name());
-                } else {
-                    // Register the command without subcommands
-                    registerBukkitCommand(spec.name(), meta, null, spec.aliases());
-                    plugin.getLogger().info("[INFO] Registered standalone command: /" + spec.name());
-                }
+                // Register the main command
+                rootCommands.put(spec.name().toLowerCase(), meta);
+                // Register the command with its aliases
+                registerBukkitCommand(spec.name(), meta, Arrays.asList(spec.aliases()));
             } catch (Exception e) {
-                plugin.getLogger().warning("[ERROR] Error while registering command: " + e.getMessage());
+                plugin.getLogger().warning("[ERROR] Error while registering root command: " + e.getMessage());
+            }
+        }
+
+        // First, register all subcommands grouped by their parent command
+        for (Class<?> clazz : subCommandClasses) {
+            try {
+                // Check if the class is annotated with @SubCommandSpec
+                SubCommandSpec spec = clazz.getAnnotation(SubCommandSpec.class);
+                // Check if the class implements AdvancedCommand
+                AdvancedCommand cmd = (AdvancedCommand) clazz.getDeclaredConstructor().newInstance();
+                // Instance to hold the command metadata
+                CommandMeta meta = new CommandMeta(cmd, spec.permission(), spec.playerOnly(), spec.syntax(), spec.description());
+
+                // Get a full path of the command
+                String[] path = (spec.parent() + " " + spec.name()).toLowerCase().split(" ");
+                if (path.length < 2) {
+                    plugin.getLogger().warning("[WARN] Invalid subcommand: It's mandatory to provide at least one parent and a name.");
+                    continue;
+                }
+
+                // Iterate through the path and build the sublevels
+                CommandMeta current = rootCommands.get(path[0]);
+                if (current == null) {
+                    plugin.getLogger().warning("[WARN] Root command not found for: " + path[0]);
+                    continue;
+                }
+
+                for (int i = 1; i < path.length - 1; i++) {
+                    current = current.getSubcommandOrCreateInvalid(path[i]);
+                }
+
+                current.addSubCommand(path[path.length - 1], meta);
+            } catch (Exception e) {
+                plugin.getLogger().warning("[ERROR] Error in subcommand: " + e.getMessage());
             }
         }
     }
@@ -97,10 +106,9 @@ public class CommandRegistry {
      *
      * @param name The name of the command.
      * @param meta The CommandMeta instance containing command metadata.
-     * @param subs A map of subcommands for this command, or null if there are none.
      * @param aliases An array of aliases for the command.
      */
-    private void registerBukkitCommand(String name, CommandMeta meta, Map<String, CommandMeta> subs, String[] aliases) {
+    private void registerBukkitCommand(String name, CommandMeta meta, List<String> aliases) {
         try {
             // Define the command map field in the Bukkit server class
             Field commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
@@ -108,8 +116,8 @@ public class CommandRegistry {
             CommandMap commandMap = (CommandMap) commandMapField.get(Bukkit.getServer()); // Get the command map instance
 
             // Create a new dynamic command with its metadata and subcommands (if any)
-            DynamicBukkitCommand dynamicCommand = new DynamicBukkitCommand(name, meta, subs != null ? subs : new HashMap<>());
-            dynamicCommand.setAliases(Arrays.asList(aliases)); // Set the command aliases
+            DynamicBukkitCommand dynamicCommand = new DynamicBukkitCommand(name, meta);
+            dynamicCommand.setAliases(aliases != null ? aliases : new ArrayList<>()); // Set the command aliases
             commandMap.register(plugin.getName(), dynamicCommand); // Register the command with the command map
             plugin.getLogger().info("[INFO] Registered command /" + name);
         } catch (Exception e) {
