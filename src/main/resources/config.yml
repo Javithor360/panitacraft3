@@ -1,1 +1,23 @@
+#################
+# Panitacraft 3 #
+#################
+
+# Prefix that is going to be used in most of the plugin messages and various commands
+# Supports any type of color codes but we highly recommend using MiniMessage formatting
 prefix: "<b><gradient:#5900DD:#9E73DE:#5900DD>PANITACRAFT</gradient></b> <#393341>»</#393341><reset> "
+
+# List of the events supported where you can customize its messages
+events:
+  # Color codes are supported in all messages
+  # Also this is the list of available placeholders that you can include:
+  # %PLAYER% - Player name
+  playerFirstJoin:
+    enabled: true
+    broadcastMessage: "<#393341>Welcome to Panitacraft, <#9E73DE><player></#9E73DE><#393341>!<reset>"
+  playerJoin:
+    enabled: true
+    broadcastMessage: "<#9E73DE>%PLAYER%</#9E73DE> <#393341>joined the server</#393341><reset>"
+    motdMessage: "<#393341>Welcome back, <#9E73DE>%PLAYER%</#9E73DE>!</#393341><reset>"
+  playerQuit:
+    enabled: true
+    broadcastMessage: "<#393341><#9E73DE>%PLAYER%</#9E73DE> left the server</#393341><reset>"

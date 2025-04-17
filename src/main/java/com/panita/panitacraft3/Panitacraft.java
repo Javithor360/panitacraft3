@@ -3,6 +3,7 @@ package com.panita.panitacraft3;
 import com.panita.panitacraft3.util.Config;
 import com.panita.panitacraft3.util.chat.Messenger;
 import com.panita.panitacraft3.util.commands.CommandRegistry;
+import com.panita.panitacraft3.util.listeners.ListenerRegistry;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -19,6 +20,8 @@ public final class Panitacraft extends JavaPlugin {
         // Initialize MiniMessage and BukkitAudiences
         BukkitAudiences adventure = BukkitAudiences.create(this);
         Messenger.init(adventure);
+
+        new ListenerRegistry(this, getConfig()).registerAll("com.panita.panitacraft3.listeners");
 
         // Load configuration
         saveDefaultConfig();
