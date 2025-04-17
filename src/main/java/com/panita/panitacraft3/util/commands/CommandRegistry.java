@@ -60,6 +60,11 @@ public class CommandRegistry {
                 // Instance to hold the command metadata
                 CommandMeta meta = new CommandMeta(cmd, spec.permission(), spec.playerOnly(), spec.syntax(), spec.description());
 
+                // Check if the command implements TabSuggestingCommand
+                if (cmd instanceof TabSuggestingCommand suggesting) {
+                    suggesting.applySuggestions(meta); // Apply tab suggestions to the command
+                }
+
                 // Register the main command
                 rootCommands.put(spec.name().toLowerCase(), meta);
                 // Register the command with its aliases
