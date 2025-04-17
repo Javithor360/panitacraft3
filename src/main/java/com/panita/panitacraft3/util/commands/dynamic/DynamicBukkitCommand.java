@@ -1,18 +1,24 @@
 package com.panita.panitacraft3.util.commands.dynamic;
 
+import com.mojang.brigadier.CommandDispatcher;
 import com.panita.panitacraft3.util.commands.identifiers.CommandMeta;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
+import org.bukkit.util.StringUtil;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
  * Represents a dynamic command in Bukkit, which can have both a main command and subcommands.
  */
-public class DynamicBukkitCommand extends Command {
+public class DynamicBukkitCommand extends Command implements TabCompleter, CommandExecutor {
     private final CommandMeta rootMeta; // The main command metadata
-
+    private final CommandDispatcher<CommandSender> dispatcher = new CommandDispatcher<>();
     /**
      * Constructor for DynamicBukkitCommand.
      *
@@ -67,6 +73,42 @@ public class DynamicBukkitCommand extends Command {
 
         // If the argument does not match any subcommands, execute the main command
         return executeMetaCommand(sender, currentMeta, args);
+    }
+
+    /**
+     * Provides tab completion suggestions for the command.
+     *
+     * @param sender The command sender (e.g., a player).
+     * @param label The label of the command.
+     * @param args The arguments passed to the command.
+     * @return A list of suggestions for tab completion.
+     */
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+        System.out.println("TabComplete Invoked for command: " + label);
+        List<String> suggestions = new ArrayList<>();
+
+        if (args.length == 1) {
+            // If there is only one argument, suggest the subcommands of the root command
+            StringUtil.copyPartialMatches(args[0], rootMeta.getSubCommands().keySet(), suggestions);
+        } else {
+            // Recursive call to get suggestions for subcommands
+            CommandMeta currentMeta = rootMeta;
+            for (int i = 0; i < args.length - 1; i++) {
+                currentMeta = currentMeta.getSubCommands().get(args[i].toLowerCase());
+                if (currentMeta == null) break; // No more subcommands available
+            }
+
+            if (currentMeta != null) {
+                StringUtil.copyPartialMatches(args[args.length - 1], currentMeta.getSubCommands().keySet(), suggestions);
+            }
+        }
+        return suggestions;
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        return execute(sender, label, args);
     }
 
     private boolean executeMetaCommand(CommandSender sender, CommandMeta currentMeta, String[] args) {

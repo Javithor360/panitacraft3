@@ -7,9 +7,11 @@ import com.panita.panitacraft3.util.commands.identifiers.SubCommandSpec;
 import com.panita.panitacraft3.util.commands.dynamic.AdvancedCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.reflections.Reflections;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -118,10 +120,23 @@ public class CommandRegistry {
             // Create a new dynamic command with its metadata and subcommands (if any)
             DynamicBukkitCommand dynamicCommand = new DynamicBukkitCommand(name, meta);
             dynamicCommand.setAliases(aliases != null ? aliases : new ArrayList<>()); // Set the command aliases
-            commandMap.register(plugin.getName(), dynamicCommand); // Register the command with the command map
+
+            // Create a new PluginCommand instance for Tab Completion
+            PluginCommand pluginCommand = createPluginCommand(name, plugin);
+            pluginCommand.setExecutor(dynamicCommand);
+            pluginCommand.setTabCompleter(dynamicCommand);
+            pluginCommand.setAliases(aliases != null ? aliases : new ArrayList<>());
+
+            commandMap.register(plugin.getName(), pluginCommand); // Register the command with the command map
             plugin.getLogger().info("[INFO] Registered command /" + name);
         } catch (Exception e) {
             plugin.getLogger().warning("[ERROR] Couldn't register command /" + name + ": " + e.getMessage());
         }
+    }
+
+    private PluginCommand createPluginCommand(String name, JavaPlugin plugin) throws Exception {
+        Constructor<PluginCommand> constructor = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
+        constructor.setAccessible(true);
+        return constructor.newInstance(name, plugin);
     }
 }

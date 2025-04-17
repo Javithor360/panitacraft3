@@ -4,9 +4,7 @@ import com.panita.panitacraft3.util.commands.dynamic.AdvancedCommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * CommandMeta holds the metadata for a command, including its permission, syntax, and description.
@@ -19,6 +17,7 @@ public class CommandMeta {
     private final String syntax;
     private final String description;
     private final Map<String, CommandMeta> subCommands = new HashMap<>();
+    private final List<String> arguments = new ArrayList<>();
 
     /**
      * Constructor for CommandMeta.
@@ -107,5 +106,18 @@ public class CommandMeta {
             return emptyMeta;
         }
         return subCommands.get(name);
+    }
+
+    public List<String> getArguments() {
+        return arguments;
+    }
+
+    /**
+     * Adds an argument to the list of arguments for this command.
+     *
+     * @param argument The argument to add.
+     */
+    public void addArgument(String argument) {
+        this.arguments.add(argument);
     }
 }
