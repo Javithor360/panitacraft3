@@ -1,5 +1,6 @@
 package com.panita.panitacraft3.util.commands;
 
+import com.panita.panitacraft3.util.Global;
 import com.panita.panitacraft3.util.commands.dynamic.DynamicBukkitCommand;
 import com.panita.panitacraft3.util.commands.dynamic.TabSuggestingCommand;
 import com.panita.panitacraft3.util.commands.identifiers.CommandMeta;
@@ -67,6 +68,7 @@ public class CommandRegistry {
 
                 // Register the main command
                 rootCommands.put(spec.name().toLowerCase(), meta);
+                Global.ROOT_COMMANDS.put(spec.name().toLowerCase(), meta);
                 // Register the command with its aliases
                 registerBukkitCommand(spec.name(), meta, Arrays.asList(spec.aliases()));
             } catch (Exception e) {
