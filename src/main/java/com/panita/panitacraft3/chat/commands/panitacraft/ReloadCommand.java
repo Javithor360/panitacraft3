@@ -2,6 +2,7 @@ package com.panita.panitacraft3.chat.commands.panitacraft;
 
 import com.panita.panitacraft3.Panitacraft;
 import com.panita.panitacraft3.difficulty.DifficultyManager;
+import com.panita.panitacraft3.difficulty.DifficultyService;
 import com.panita.panitacraft3.util.Global;
 import com.panita.panitacraft3.util.chat.Messenger;
 import com.panita.panitacraft3.util.commands.dynamic.AdvancedCommand;
@@ -23,7 +24,6 @@ public class ReloadCommand implements AdvancedCommand {
 
         plugin.reloadConfig();
         Global.load(plugin);
-        DifficultyManager.get().updateGlobalDifficulty();
 
         Messenger.prefixedSend(sender, "<green>Configuración recargada correctamente.</green>");
     }

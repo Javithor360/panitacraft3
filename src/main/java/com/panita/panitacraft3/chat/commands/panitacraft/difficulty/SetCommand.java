@@ -1,6 +1,7 @@
 package com.panita.panitacraft3.chat.commands.panitacraft.difficulty;
 
 import com.panita.panitacraft3.difficulty.DifficultyManager;
+import com.panita.panitacraft3.difficulty.DifficultyService;
 import com.panita.panitacraft3.util.CommandUtils;
 import com.panita.panitacraft3.util.chat.Messenger;
 import com.panita.panitacraft3.util.commands.dynamic.AdvancedCommand;
@@ -26,7 +27,7 @@ public class SetCommand implements AdvancedCommand {
                 return;
             }
 
-            DifficultyManager.get().setDifficultyMultiplier(value);
+            DifficultyService.setManualDifficultyMultiplier(value);
             Messenger.prefixedSend(sender, "<green>Multiplicador actualizado a:</green> <gold>x" + value + "</gold>");
         } catch (NumberFormatException e) {
             Messenger.prefixedSend(sender, "<red>Debes ingresar un número válido (ej: 1.0)</red>");

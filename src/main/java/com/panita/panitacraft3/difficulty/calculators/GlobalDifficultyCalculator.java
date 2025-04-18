@@ -18,17 +18,17 @@ public class GlobalDifficultyCalculator {
      * @return A number between 0 and the max fixed difficulty set representing the global difficulty.
      */
     public static double calculate() {
-        double worldDaysNorm = Global.normalize(getWorldDays(), 0, 56000); // Normalize up to 56,000 in-game days
+        double worldDaysNorm = Global.normalize(getWorldDays(), 0, 1000); // Normalize up to 1000 in-game days
         double onlinePlayersNorm = Global.normalize(Bukkit.getOnlinePlayers().size(), 0, Bukkit.getMaxPlayers()); // Normalize online players to max players
         double averageBiomeDanger = getAverageBiomeDanger(); // Get the average biome danger level
         double globalEventPenalty = getGlobalEventPenalty(); //
 
         // Applies the following formula:
-        // [(worldDays · 0.4) + (onlinePlayers · 0.3) + (biomeDanger · 0.15) - (eventPenalty · 0.15)] * maxDifficulty
+        // [(worldDays · 0.4) + (onlinePlayers · 0.25) + (biomeDanger · 0.1) - (eventPenalty · 0.15)] * maxDifficulty
         double globalDifficulty =
-                ((worldDaysNorm * 0.4) +
-                        (onlinePlayersNorm * 0.3) +
-                        (averageBiomeDanger * 0.15) +
+                ((worldDaysNorm * 0.5) +
+                        (onlinePlayersNorm * 0.25) +
+                        (averageBiomeDanger * 0.1) +
                         (globalEventPenalty * 0.15)
                 ) * FIXED_MAX_DIFFICULTY;
 
@@ -50,7 +50,7 @@ public class GlobalDifficultyCalculator {
      *
      * @return The average biome danger level.
      */
-    private static double getAverageBiomeDanger() {
+    public static double getAverageBiomeDanger() {
         if (Bukkit.getOnlinePlayers().isEmpty()) return 0;
 
         return Bukkit.getOnlinePlayers().stream()
@@ -63,7 +63,7 @@ public class GlobalDifficultyCalculator {
      *
      * @return The global event penalty.
      */
-    private static double getGlobalEventPenalty() {
+    public static double getGlobalEventPenalty() {
         return 0; // Placeholder for global event penalty
     }
 }
