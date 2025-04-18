@@ -21,3 +21,6 @@ events:
   playerQuit:
     enabled: true
     broadcastMessage: "<#393341><#9E73DE>%PLAYER%</#9E73DE> left the server</#393341><reset>"
+
+  difficulty:
+    multiplier: 1.0
