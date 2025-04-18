@@ -1,17 +1,15 @@
 package com.panita.panitacraft3.difficulty.calculators;
 
-import com.panita.panitacraft3.difficulty.util.BiomeDanger;
 import com.panita.panitacraft3.util.Global;
 import org.bukkit.Bukkit;
-import org.bukkit.Statistic;
 
 import static com.panita.panitacraft3.difficulty.DifficultyService.FIXED_MAX_DIFFICULTY;
 
 /**
- * GlobalDifficultyCalculator is a utility class that calculates the global difficulty of the server
- * based on various factors such as world days, online players, average biome danger, and global events.
+ * ChronologicDifficultyCalculator is a utility class that calculates the global difficulty of the server
+ * based on various parameters such as world days, online players, and global events.
  */
-public class GlobalDifficultyCalculator {
+public class ChronologicDifficultyCalculator {
     /**
      * Calculates the global difficulty of the server based on various parameters.
      *
@@ -20,16 +18,14 @@ public class GlobalDifficultyCalculator {
     public static double calculate() {
         double worldDaysNorm = Global.normalize(getWorldDays(), 0, 1000); // Normalize up to 1000 in-game days
         double onlinePlayersNorm = Global.normalize(Bukkit.getOnlinePlayers().size(), 0, Bukkit.getMaxPlayers()); // Normalize online players to max players
-        double averageBiomeDanger = getAverageBiomeDanger(); // Get the average biome danger level
         double globalEventPenalty = getGlobalEventPenalty(); //
 
         // Applies the following formula:
         // [(worldDays · 0.4) + (onlinePlayers · 0.25) + (biomeDanger · 0.1) - (eventPenalty · 0.15)] * maxDifficulty
         double globalDifficulty =
-                ((worldDaysNorm * 0.5) +
-                        (onlinePlayersNorm * 0.25) +
-                        (averageBiomeDanger * 0.1) +
-                        (globalEventPenalty * 0.15)
+                ((worldDaysNorm * 0.7) +
+                        (onlinePlayersNorm * 0.2) +
+                        (globalEventPenalty * 0.1)
                 ) * FIXED_MAX_DIFFICULTY;
 
         return Math.min(globalDifficulty, FIXED_MAX_DIFFICULTY); // Ensure difficulty does not exceed max difficulty
@@ -43,19 +39,6 @@ public class GlobalDifficultyCalculator {
     private static int getWorldDays() {
         long time = Bukkit.getWorlds().getFirst().getFullTime();
         return (int) (time / 24000);
-    }
-
-    /**
-     * Retrieves the average biome danger level based on the players' locations.
-     *
-     * @return The average biome danger level.
-     */
-    public static double getAverageBiomeDanger() {
-        if (Bukkit.getOnlinePlayers().isEmpty()) return 0;
-
-        return Bukkit.getOnlinePlayers().stream()
-                .mapToDouble(p -> BiomeDanger.getDangerLevel(p.getLocation().getBlock().getBiome()))
-                .average().orElse(0);
     }
 
     /**
