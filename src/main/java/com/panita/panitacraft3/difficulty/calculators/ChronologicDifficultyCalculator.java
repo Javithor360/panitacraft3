@@ -1,5 +1,6 @@
 package com.panita.panitacraft3.difficulty.calculators;
 
+import com.panita.panitacraft3.difficulty.util.DifficultyConfig;
 import com.panita.panitacraft3.util.Global;
 import org.bukkit.Bukkit;
 import org.bukkit.Statistic;
@@ -19,20 +20,20 @@ public class ChronologicDifficultyCalculator {
      * @return A number between 0 and the max fixed difficulty set representing the global difficulty.
      */
     public static double calculate() {
-        double worldDaysNorm = Global.normalize(getWorldDays(), 0, 5000); // Normalize up to 5000 in-game days
-        double onlinePlayersNorm = Global.normalize(Bukkit.getOnlinePlayers().size(), 0, Bukkit.getMaxPlayers()); // Normalize online players to max players
+        double worldDaysNorm = Global.normalize(getWorldDays(), DifficultyConfig.getChronoWorldDaysMin(), DifficultyConfig.getChronoWorldDaysMax()); // Normalize up to 5000 in-game days
+        double onlinePlayersNorm = Global.normalize(Bukkit.getOnlinePlayers().size(), DifficultyConfig.getChronoOnlinePlayersMin(), DifficultyConfig.getChronoOnlinePlayersMax(Bukkit.getMaxPlayers())); // Normalize online players to max players
         double totalLoadedChunks = Global.normalize(Bukkit.getWorlds().stream()
                 .mapToInt(world -> world.getLoadedChunks().length)
-                .sum(), 16, 50000); // Normalize loaded chunks to 16-50000
+                .sum(), DifficultyConfig.getChronoChunksMin(), DifficultyConfig.getChronoChunksMax()); // Normalize loaded chunks to 16-50000
         double globalEventPenalty = getGlobalEventPenalty(); //
 
         // Applies the following formula:
         // [(worldDays * 0.4) + (onlinePlayers * 0.3) + (totalLoadedChunks * 0.04) + (globalEventPenalty * 0.1)] * maxDifficulty
         double globalDifficulty =
-                ((worldDaysNorm * 0.3) +
-                        (onlinePlayersNorm * 0.2) +
-                        (totalLoadedChunks * 0.3) +
-                        (globalEventPenalty * 0.2)
+                ((worldDaysNorm * DifficultyConfig.getChronoWorldDaysWeight()) +
+                        (onlinePlayersNorm * DifficultyConfig.getChronoOnlinePlayersWeight()) +
+                        (totalLoadedChunks * DifficultyConfig.getChronoChunksWeight()) +
+                        (globalEventPenalty * DifficultyConfig.getChronoEventsWeight())
                 ) * FIXED_MAX_DIFFICULTY;
 
         return Math.min(globalDifficulty, FIXED_MAX_DIFFICULTY); // Ensure difficulty does not exceed max difficulty

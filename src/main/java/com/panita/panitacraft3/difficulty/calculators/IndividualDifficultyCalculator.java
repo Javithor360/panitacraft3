@@ -1,7 +1,9 @@
 package com.panita.panitacraft3.difficulty.calculators;
 
+import com.panita.panitacraft3.difficulty.DifficultyProfile;
 import com.panita.panitacraft3.difficulty.DifficultyService;
 import com.panita.panitacraft3.difficulty.util.BiomeDanger;
+import com.panita.panitacraft3.difficulty.util.DifficultyConfig;
 import com.panita.panitacraft3.util.Global;
 import com.panita.panitacraft3.util.chat.Messenger;
 import org.bukkit.Statistic;
@@ -34,25 +36,25 @@ public class IndividualDifficultyCalculator {
         double biomeDanger = BiomeDanger.getDangerLevel(player.getLocation().getBlock().getBiome());
         double dimensionMultiplier = getDimensionMultiplier(player);
 
-        double timeSinceDeathNorm = Global.normalize(timeSinceLastDeath, 0, 48); // Normalize time since rest to 0-48 hours
-        double timeSinceRestNorm = Global.normalize(timeSinceLastRest, 0, 12); // Normalize time since rest to 0-12 hours
-        double playTimeNorm = Global.normalize(playTimeHours, 0, 250 * 3600); // Normalize playtime to 0-250 played hours
-        double mobsKilledNorm = Global.normalize(mobsKilled, 0, 5000); // Normalize up to 5000 mobs killed
-        double equipNorm = Global.normalize(equipmentScore, 0, 500); // Normalize equipment score to 0-100
-        double levelNorm = Global.normalize(xpLevel, 0, 500); // Normalize level to 0-500
-        double deathNorm = Global.normalize(deaths, 0, 250); // Normalize deaths to 0-250
+        double timeSinceDeathNorm = Global.normalize(timeSinceLastDeath, DifficultyConfig.getIndividualTimeSinceDeathMin(), DifficultyConfig.getIndividualTimeSinceDeathMax()); // Normalize time since rest to 0-48 hours
+        double timeSinceRestNorm = Global.normalize(timeSinceLastRest, DifficultyConfig.getIndividualTimeSinceRestMin(), DifficultyConfig.getIndividualTimeSinceRestMax()); // Normalize time since rest to 0-12 hours
+        double playTimeNorm = Global.normalize(playTimeHours, DifficultyConfig.getIndividualPlaytimeMin(), DifficultyConfig.getIndividualPlaytimeMax() * 3600); // Normalize playtime to 0-250 played hours
+        double mobsKilledNorm = Global.normalize(mobsKilled, DifficultyConfig.getIndividualMobsKilledMin(), DifficultyConfig.getIndividualMobsKilledMax()); // Normalize up to 5000 mobs killed
+        double equipNorm = Global.normalize(equipmentScore, DifficultyConfig.getIndividualEquipmentMin(), DifficultyConfig.getIndividualEquipmentMax()); // Normalize equipment score to 0-100
+        double levelNorm = Global.normalize(xpLevel, DifficultyConfig.getIndividualXpMin(), DifficultyConfig.getIndividualXpMax()); // Normalize level to 0-500
+        double deathNorm = Global.normalize(deaths, DifficultyConfig.getIndividualDeathCountMin(), DifficultyConfig.getIndividualDeathCountMax()); // Normalize deaths to 0-250
 
         // Applies the following formula:
         // [(timeSinceLastDeath * 0.1) + (timeSinceLastRest * 0.1) + (playtime * 0.4) + (mobsKilled * 0.3) +
         //  (equipment * 0.3) + (xp level * 0.2) - (deaths * 0.3)] * (biomeDanger * dimensionMultiplier) * maxDifficulty
         double individualDifficulty = (
-                (timeSinceDeathNorm * 0.1) +
-                (timeSinceRestNorm * 0.1) +
-                (playTimeNorm * 0.4) +
-                (mobsKilledNorm * 0.3) +
-                (equipNorm * 0.5) +
-                (levelNorm * 0.2) -
-                (deathNorm * 0.4)
+                (timeSinceDeathNorm * DifficultyConfig.getIndividualTimeSinceDeathWeight()) +
+                (timeSinceRestNorm * DifficultyConfig.getIndividualTimeSinceRestWeight()) +
+                (playTimeNorm * DifficultyConfig.getIndividualPlaytimeWeight()) +
+                (mobsKilledNorm * DifficultyConfig.getIndividualMobsKilledWeight()) +
+                (equipNorm * DifficultyConfig.getIndividualEquipmentWeight()) +
+                (levelNorm * DifficultyConfig.getIndividualXpWeight()) -
+                (deathNorm * DifficultyConfig.getIndividualDeathCountWeight())
         ) * (biomeDanger * dimensionMultiplier) * DifficultyService.FIXED_MAX_DIFFICULTY;
 
         return Math.min(individualDifficulty, DifficultyService.FIXED_MAX_DIFFICULTY); // Ensure difficulty is not negative
@@ -60,10 +62,10 @@ public class IndividualDifficultyCalculator {
 
     public static double getDimensionMultiplier(Player player) {
         return switch (player.getWorld().getEnvironment()) {
-            case NORMAL -> 1.0; // Overworld
-            case NETHER -> 1.75; // Nether
-            case THE_END -> 1.5; // End
-            default -> 1.25; // Default multiplier for other dimensions
+            case NORMAL -> DifficultyConfig.getDimensionMultiplierOverworld(); // Overworld
+            case NETHER -> DifficultyConfig.getDimensionMultiplierNether(); // Nether
+            case THE_END -> DifficultyConfig.getDimensionMultiplierEnd(); // End
+            default -> DifficultyConfig.getDimensionMultiplierOther(); // Default multiplier for other dimensions
         };
     }
 }

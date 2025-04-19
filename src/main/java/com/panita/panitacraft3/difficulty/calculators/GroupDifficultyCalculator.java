@@ -1,20 +1,17 @@
 package com.panita.panitacraft3.difficulty.calculators;
 
+import com.panita.panitacraft3.difficulty.DifficultyService;
+import com.panita.panitacraft3.difficulty.util.DifficultyConfig;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
-
-import static com.panita.panitacraft3.difficulty.DifficultyService.FIXED_MAX_DIFFICULTY;
 
 /**
  * GroupDifficultyCalculator is a utility class that calculates the difficulty of a group of players
  * based on the average difficulty of individual players within a specified radius.
  */
 public class GroupDifficultyCalculator {
-    // The radius distance to consider players for group difficulty calculation
-    private static final double CONTEXT_RADIUS_DISTANCE = 128.0;
-
     /**
      * Calculates the difficulty of a group of players based on their average individual difficulties.
      * Uses the following formula:
@@ -24,8 +21,11 @@ public class GroupDifficultyCalculator {
      * @return A number between 0 and the max fixed difficulty set representing the group difficulty.
      */
     public static double calculate(Location center) {
+        // The radius distance to consider players for group difficulty calculation
+        double radius = DifficultyConfig.getGroupRadius();
+
         // Get all players within the specified radius of the center location
-        Collection<Player> players = center.getWorld().getNearbyPlayers(center, CONTEXT_RADIUS_DISTANCE);
+        Collection<Player> players = center.getWorld().getNearbyPlayers(center, radius);
 
         // If no players are found, return 0 difficulty
         if (players.isEmpty()) return 0;
@@ -34,11 +34,12 @@ public class GroupDifficultyCalculator {
         double total = 0;
         for (Player p : players) {
             // Calculate individual difficulty for each player and sum it up
-            total += IndividualDifficultyCalculator.calculate(p);
+            // total += IndividualDifficultyCalculator.calculate(p);
+            DifficultyService.getIndividualDifficulty(p);
         }
 
         // Applies the following formula:
         // (Σ eachPlayerDI) / playersInRadius
-        return Math.min(total / players.size(), FIXED_MAX_DIFFICULTY);
+        return Math.min(total / players.size(), DifficultyService.FIXED_MAX_DIFFICULTY);
     }
 }
