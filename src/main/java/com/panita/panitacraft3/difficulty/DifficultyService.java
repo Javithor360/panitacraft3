@@ -4,7 +4,6 @@ import com.panita.panitacraft3.difficulty.calculators.ChronologicDifficultyCalcu
 import com.panita.panitacraft3.difficulty.calculators.GroupDifficultyCalculator;
 import com.panita.panitacraft3.difficulty.calculators.IndividualDifficultyCalculator;
 import com.panita.panitacraft3.difficulty.util.DifficultyConfig;
-import com.panita.panitacraft3.util.Global;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -141,7 +140,7 @@ public class DifficultyService {
      */
     public static void setManualDifficultyMultiplier(double multiplier) {
         MANUAL_DIFFICULTY_MULTIPLIER = Math.max(0, multiplier);
-        Global.writeDifficultyMultiplier(multiplier); // Save to config.yml
+        DifficultyConfig.setDifficultyMultiplier(multiplier); // Save to config.yml
     }
 
     /**

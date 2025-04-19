@@ -221,4 +221,11 @@ public class DifficultyConfig {
         if (!DifficultyConfig.isEnabled()) return 0;
         return config.getDouble("difficulty.auto_generated.individual.dimension_multiplier.other", 1.25);
     }
+
+    // Set the config values
+    public static void setDifficultyMultiplier(double multiplier) {
+        Panitacraft plugin = Panitacraft.getPlugin(Panitacraft.class);
+        plugin.getConfig().set("difficulty.multiplier", multiplier);
+        plugin.saveConfig();
+    }
 }
