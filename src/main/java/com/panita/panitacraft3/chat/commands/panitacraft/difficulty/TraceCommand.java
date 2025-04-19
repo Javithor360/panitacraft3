@@ -35,15 +35,17 @@ public class TraceCommand implements AdvancedCommand {
 
         if (!DifficultyConfig.isEnabled()) {
             Messenger.send(player, "<gray>========[ <gradient:#9E73DE:#5900DD>DIFICULTAD - TRAZADO DETALLADO</gradient> ]========</gray>");
-            Messenger.send(player, "<red>❌ El sistema de dificultad dinámica está actualmente <bold>desactivado</bold>.</red>");
+            Messenger.send(player, "<red>El sistema de dificultad dinámica está actualmente desactivado.</red>");
             Messenger.send(player, "<red>Actívalo en el archivo <white>config.yml</white> para comenzar a escalar dinámicamente.</red>");
             Messenger.send(player, "<gray>=====================================================</gray>");
             return;
         }
 
+        Messenger.send(player, "");
         Messenger.send(player, "<gray>========[ <gradient:#9E73DE:#5900DD>DIFICULTAD - TRAZADO DETALLADO</gradient> ]========</gray>");
 
         // ========== CONFIG GLOBAL ==========
+        Messenger.send(player, "");
         Messenger.send(player, "<gold>⚙ CONFIGURACIÓN GLOBAL</gold>");
         Messenger.send(player, " <gray>Radio de dificultad grupal:</gray> <aqua>" + DifficultyConfig.getGroupRadius() + " bloques</aqua>");
         Messenger.send(player, " <gray>Máxima dificultad escalable:</gray> <aqua>" + DifficultyConfig.getMaxDifficultyScale() + "</aqua>");
