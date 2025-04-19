@@ -1,6 +1,7 @@
 package com.panita.panitacraft3;
 
 import com.panita.panitacraft3.difficulty.DifficultyUpdateCron;
+import com.panita.panitacraft3.difficulty.util.DifficultyConfig;
 import com.panita.panitacraft3.util.Config;
 import com.panita.panitacraft3.util.chat.Messenger;
 import com.panita.panitacraft3.util.commands.CommandRegistry;
@@ -30,6 +31,7 @@ public final class Panitacraft extends JavaPlugin {
         Config.load(this);
 
         //
+        DifficultyConfig.load(getConfig());
         DifficultyUpdateCron.start(this);
     }
 
