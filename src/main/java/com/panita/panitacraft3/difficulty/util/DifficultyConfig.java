@@ -14,6 +14,9 @@ public class DifficultyConfig {
     private static int groupRadius;
     private static double manualMultiplier;
 
+    private static String filledIcon;
+    private static String emptyIcon;
+
     // Difficulties weights
     private static double chronoWeight;
     private static double groupWeight;
@@ -74,6 +77,8 @@ public class DifficultyConfig {
         maxDifficultyScale = config.getDouble("difficulty.max_difficulty_scale", 250.0);
         groupRadius = config.getInt("difficulty.group_difficulty_radius", 128);
         manualMultiplier = config.getDouble("difficulty.multiplier", 1.0);
+        filledIcon = config.getString("difficulty.status_bar_filled_icon", "◆");
+        emptyIcon = config.getString("difficulty.status_bar_empty_icon", "◇");
 
         chronoWeight = config.getDouble("difficulty.auto_generated.chronological_weight_in_formula", 0.4);
         groupWeight = config.getDouble("difficulty.auto_generated.group_weight_in_formula", 0.6);
@@ -153,6 +158,14 @@ public class DifficultyConfig {
 
     public static int getGroupRadius() {
         return enabled ? groupRadius : 0;
+    }
+
+    public static String getFilledIcon() {
+        return enabled ? filledIcon : "";
+    }
+
+    public static String getEmptyIcon() {
+        return enabled ? emptyIcon : "";
     }
 
     public static double getChronologicWeight() {

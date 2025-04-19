@@ -95,6 +95,12 @@ difficulty:
   # Default value: 128
   group_difficulty_radius: 128
 
+  # [STRING] The Unicode character used to represent the status bar in the difficulty status command
+  # Default values: "▮", "▯"
+  # Recommended alternatives: "◆", "◇", "■", "□", "●", "○"
+  status_bar_filled_icon: "▮"
+  status_bar_empty_icon: "▯"
+
   # This section contains the logic and parameters of the auto-generated difficulty system.
   # The auto-generated difficulty is the result of combining Chronological difficulty (DG)
   # and Group difficulty (DGp, the average of individual difficulties around a mob).
