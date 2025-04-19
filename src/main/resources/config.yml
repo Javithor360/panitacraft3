@@ -107,12 +107,13 @@ difficulty:
     # [DOUBLE] How much weight the group (nearby player average) difficulty has in the final calculation.
     group_weight_in_formula: 0.6
 
+    # [INTEGER] Milliseconds to wait before recalculating the difficulty.
+    # Higher values improve performance but make the value update less frequently
+    # Default value: 300000 (5 minutes)
+    delay_between_checks: 300000
+
     # Settings for the CHRONOLOGICAL difficulty component (DG)
     chronological:
-      # [INTEGER] Milliseconds to wait before recalculating the chronological difficulty.
-      # Higher values improve performance but make the value update less frequently
-      delay_between_checks: 10000
-
       # These are the core factors that influence the chronological difficulty.
       # Each is normalized between min/max before being multiplied by its weight.
       factors:

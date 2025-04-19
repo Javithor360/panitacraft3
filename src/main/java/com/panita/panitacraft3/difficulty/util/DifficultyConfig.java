@@ -38,8 +38,8 @@ public class DifficultyConfig {
     }
 
     // Chronologic difficulty and factors
-    public static long getChronologicCheckDelay() {
-        return config.getLong("difficulty.auto_generated.chronological.delay_between_checks", 600000);
+    public static long getDifficultyCheckDelay() {
+        return config.getLong("difficulty.auto_generated.delay_between_checks", 3600000L);
     }
 
     public static double getChronoWorldDaysWeight() {

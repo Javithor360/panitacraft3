@@ -9,13 +9,17 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 /**
  * DifficultyService is a utility class that provides methods to calculate and manage the difficulty of the game.
  * It calculates global, group, and individual difficulties based on various parameters.
  */
 public class DifficultyService {
     // Time in milliseconds to cache the chronologic difficulty
-    private static final long CACHE_DURATION_MS = DifficultyConfig.getChronologicCheckDelay();
+    private static final long CACHE_DURATION_MS = DifficultyConfig.getDifficultyCheckDelay();
     // The maximum difficulty value that can be returned
     public static final double FIXED_MAX_DIFFICULTY = DifficultyConfig.getMaxDifficultyScale();
     // The given difficulty multiplier for manual difficulty adjustments
@@ -25,24 +29,32 @@ public class DifficultyService {
     private static double cachedChronologicDifficulty = 0.0;
     // The last time the chronologic difficulty was calculated
     private static long lastChronologicCalculation = 0;
+    // The cached individual difficulty values for players
+    private static final Map<UUID, CachedDifficulty> individualDifficultyCache = new HashMap<>();
+
+    public static double getChronologicDifficulty() {
+        return getChronologicDifficulty(false);
+    }
 
     /**
      * Evaluates the last cached chronologic difficulty and determines if it needs to be recalculated.
+     * @param skipCache If true, forces a recalculation of the chronologic difficulty.
      * @return A number between 0 and the max fixed difficulty set representing the chronologic difficulty.
      */
-    public static double getChronologicDifficulty() {
+    public static double getChronologicDifficulty(boolean skipCache) {
         if (!DifficultyConfig.isEnabled()) return 0;
 
         long now = System.currentTimeMillis();
 
         // Check if the cached chronologic difficulty is older than the cache duration
-        if (now - lastChronologicCalculation > CACHE_DURATION_MS) {
-            // Recalculate the chronologic difficulty
-            cachedChronologicDifficulty = ChronologicDifficultyCalculator.calculate();
-            lastChronologicCalculation = now;
+        if (!skipCache && (now - lastChronologicCalculation < CACHE_DURATION_MS)) {
+            return cachedChronologicDifficulty;
         }
 
-        return cachedChronologicDifficulty;
+        double newValue = ChronologicDifficultyCalculator.calculate();
+        cachedChronologicDifficulty = newValue;
+        lastChronologicCalculation = now;
+        return newValue;
     }
 
     /**
@@ -90,15 +102,64 @@ public class DifficultyService {
      */
     public static double getIndividualDifficulty(Player player) {
         if (!DifficultyConfig.isEnabled()) return 0;
-        return IndividualDifficultyCalculator.calculate(player); // Calculate the individual difficulty
+        return getIndividualDifficulty(player, false); // Calculate the individual difficulty
     }
 
+    /**
+     * Calculates the difficulty of a player based on their individual difficulty.
+     * @param player The player to calculate the difficulty for.
+     * @param skipCache If true, forces a recalculation of the individual difficulty.
+     * @return A number between 0 and the max fixed difficulty set representing the individual difficulty.
+     */
+    public static double getIndividualDifficulty(Player player, boolean skipCache) {
+        UUID uuid = player.getUniqueId();
+        long now = System.currentTimeMillis();
+
+        if (!skipCache && individualDifficultyCache.containsKey(uuid)) {
+            CachedDifficulty cached = individualDifficultyCache.get(uuid);
+            if (now - cached.timestamp < CACHE_DURATION_MS) {
+                return cached.value;
+            }
+        }
+
+        double newValue = IndividualDifficultyCalculator.calculate(player);
+        individualDifficultyCache.put(uuid, new CachedDifficulty(newValue, now));
+        return newValue;
+    }
+
+    /**
+     * Retrieves the manual difficulty multiplier.
+     * @return The manual difficulty multiplier.
+     */
     public static double getManualDifficultyMultiplier() {
         return MANUAL_DIFFICULTY_MULTIPLIER;
     }
 
+    /**
+     * Sets the manual difficulty multiplier.
+     * @param multiplier The new manual difficulty multiplier.
+     */
     public static void setManualDifficultyMultiplier(double multiplier) {
         MANUAL_DIFFICULTY_MULTIPLIER = Math.max(0, multiplier);
-        Global.writeDifficultyMultiplier(multiplier);
+        Global.writeDifficultyMultiplier(multiplier); // Save to config.yml
+    }
+
+    /**
+     * Internal class that handles the caching of difficulty values
+     * for the individual players.
+     */
+    private static class CachedDifficulty {
+        double value;
+        long timestamp;
+
+        /**
+         * Constructor for CachedDifficulty.
+         * @param value The difficulty value to cache.
+         * @param timestamp The timestamp when the difficulty was calculated.
+         */
+        CachedDifficulty(double value, long timestamp) {
+            this.value = value;
+            this.timestamp = timestamp;
+        }
     }
 }

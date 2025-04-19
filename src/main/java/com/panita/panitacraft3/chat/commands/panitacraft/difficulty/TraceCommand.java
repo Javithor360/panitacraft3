@@ -51,7 +51,7 @@ public class TraceCommand implements AdvancedCommand {
         Messenger.send(player, "");
 
         // ========== CHRONOLOGIC ==========
-        double dg = DifficultyService.getChronologicDifficulty();
+        double dg = DifficultyService.getChronologicDifficulty(true);
         int days = (int) (Bukkit.getWorlds().getFirst().getFullTime() / 24000);
         int online = Bukkit.getOnlinePlayers().size();
         int maxPlayers = Bukkit.getMaxPlayers();
@@ -99,7 +99,7 @@ public class TraceCommand implements AdvancedCommand {
 
         double biome = BiomeDanger.getDangerLevel(player.getLocation().getBlock().getBiome());
         double dimMult = IndividualDifficultyCalculator.getDimensionMultiplier(player);
-        double di = DifficultyService.getIndividualDifficulty(player);
+        double di = DifficultyService.getIndividualDifficulty(player, true);
 
         Messenger.send(player, "<gold>👤 DIFICULTAD INDIVIDUAL</gold>");
         Messenger.send(player, " <gray>Fórmula:</gray> [(factores normalizados * pesos)] * (biome * dimension) * max");
@@ -120,7 +120,7 @@ public class TraceCommand implements AdvancedCommand {
         StringBuilder formulaBuilder = new StringBuilder();
         double totalGroupDI = 0;
         for (Player nearby : groupPlayers) {
-            double nearbyDI = DifficultyService.getIndividualDifficulty(nearby);
+            double nearbyDI = DifficultyService.getIndividualDifficulty(nearby, true);
             totalGroupDI += nearbyDI;
             formulaBuilder.append(fmt(nearbyDI)).append(" (").append(nearby.getName()).append(") + ");
         }

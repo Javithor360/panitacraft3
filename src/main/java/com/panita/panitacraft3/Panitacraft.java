@@ -1,5 +1,6 @@
 package com.panita.panitacraft3;
 
+import com.panita.panitacraft3.difficulty.DifficultyUpdateCron;
 import com.panita.panitacraft3.util.Config;
 import com.panita.panitacraft3.util.chat.Messenger;
 import com.panita.panitacraft3.util.commands.CommandRegistry;
@@ -22,10 +23,14 @@ public final class Panitacraft extends JavaPlugin {
         Messenger.init(adventure);
 
         new ListenerRegistry(this, getConfig()).registerAll("com.panita.panitacraft3.listeners");
+        // new ListenerRegistry(this, getConfig()).registerAll("com.panita.panitacraft3.difficulty.listeners");
 
         // Load configuration
         saveDefaultConfig();
         Config.load(this);
+
+        //
+        DifficultyUpdateCron.start(this);
     }
 
     @Override
