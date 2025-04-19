@@ -34,8 +34,7 @@ public class GroupDifficultyCalculator {
         double total = 0;
         for (Player p : players) {
             // Calculate individual difficulty for each player and sum it up
-            // total += IndividualDifficultyCalculator.calculate(p);
-            DifficultyService.getIndividualDifficulty(p);
+            total += DifficultyService.getIndividualDifficulty(p);
         }
 
         // Applies the following formula:
