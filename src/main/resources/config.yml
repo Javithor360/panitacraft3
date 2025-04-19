@@ -127,10 +127,10 @@ difficulty:
         online_players:
           weight: 0.2
           min: 0
-          max: %MAX_PLAYERS%
+          max: "%MAX_PLAYERS%"
         # Total number of currently loaded chunks in all worlds.
         # Reflects world exploration and infrastructure development.
-        totalLoadedChunks:
+        total_loaded_chunks:
           weight: 0.3
           min: 16
           max: 50000
