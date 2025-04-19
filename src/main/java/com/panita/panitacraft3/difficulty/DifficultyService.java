@@ -18,7 +18,7 @@ import java.util.UUID;
  */
 public class DifficultyService {
     // Time in milliseconds to cache the chronologic difficulty
-    private static final long CACHE_DURATION_MS = DifficultyConfig.getDifficultyCheckDelay();
+    private static final long CACHE_DURATION_MS = DifficultyConfig.getDelayBetweenChecks();
     // The maximum difficulty value that can be returned
     public static final double FIXED_MAX_DIFFICULTY = DifficultyConfig.getMaxDifficultyScale();
     // The given difficulty multiplier for manual difficulty adjustments
@@ -141,6 +141,16 @@ public class DifficultyService {
     public static void setManualDifficultyMultiplier(double multiplier) {
         MANUAL_DIFFICULTY_MULTIPLIER = Math.max(0, multiplier);
         DifficultyConfig.setDifficultyMultiplier(multiplier); // Save to config.yml
+    }
+
+    /**
+     * Resets the cached values for difficulty calculations.
+     * This method clears the cached chronologic difficulty and individual difficulties.
+     */
+    public static void resetCaches() {
+        cachedChronologicDifficulty = 0.0;
+        lastChronologicCalculation = 0L;
+        individualDifficultyCache.clear();
     }
 
     /**
