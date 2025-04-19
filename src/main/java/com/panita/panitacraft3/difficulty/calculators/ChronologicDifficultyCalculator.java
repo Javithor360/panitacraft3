@@ -12,16 +12,18 @@ import static com.panita.panitacraft3.difficulty.DifficultyService.FIXED_MAX_DIF
 public class ChronologicDifficultyCalculator {
     /**
      * Calculates the global difficulty of the server based on various parameters.
+     * Uses the following formula:
+     * <br /> <code>[(worldDays · 0.7) + (onlinePlayers · 0.2) + (eventPenalty · 0.1)] * maxDifficulty</code>
      *
      * @return A number between 0 and the max fixed difficulty set representing the global difficulty.
      */
     public static double calculate() {
-        double worldDaysNorm = Global.normalize(getWorldDays(), 0, 1000); // Normalize up to 1000 in-game days
+        double worldDaysNorm = Global.normalize(getWorldDays(), 0, 5000); // Normalize up to 5000 in-game days
         double onlinePlayersNorm = Global.normalize(Bukkit.getOnlinePlayers().size(), 0, Bukkit.getMaxPlayers()); // Normalize online players to max players
         double globalEventPenalty = getGlobalEventPenalty(); //
 
         // Applies the following formula:
-        // [(worldDays · 0.4) + (onlinePlayers · 0.25) + (biomeDanger · 0.1) - (eventPenalty · 0.15)] * maxDifficulty
+        // [(worldDays · 0.7) + (onlinePlayers · 0.2) + (eventPenalty · 0.1)] * maxDifficulty
         double globalDifficulty =
                 ((worldDaysNorm * 0.7) +
                         (onlinePlayersNorm * 0.2) +

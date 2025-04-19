@@ -17,6 +17,8 @@ public class GroupDifficultyCalculator {
 
     /**
      * Calculates the difficulty of a group of players based on their average individual difficulties.
+     * Uses the following formula:
+     * <br /> <code>(Σ eachPlayerDI) / playersInRadius</code>
      *
      * @param center The location to calculate the group difficulty for.
      * @return A number between 0 and the max fixed difficulty set representing the group difficulty.

@@ -13,6 +13,8 @@ import org.bukkit.entity.Player;
 public class IndividualDifficultyCalculator {
     /**
      * Calculates the difficulty of a player based on their playtime, deaths, experience level, and equipment score.
+     * Uses the following formula:
+     * <br /> <code>[(timeSinceLastDeath * 0.1) + (timeSinceLastRest * 0.1) + (playtime * 0.4) + (mobsKilled * 0.3) + (equipment * 0.3) + (xp level * 0.2) - (deaths * 0.3)] * (biomeDanger * dimensionMultiplier) * maxDifficulty</code>
      *
      * @param player The player whose difficulty is to be calculated.
      * @return A number between 0 and the max fixed difficulty set representing the player's difficulty.
