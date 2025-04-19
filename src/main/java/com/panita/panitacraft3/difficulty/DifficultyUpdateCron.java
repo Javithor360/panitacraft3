@@ -32,6 +32,6 @@ public class DifficultyUpdateCron {
                 // Update the chronologic difficulty
                 DifficultyService.getChronologicDifficulty(true);
             }
-        }.runTaskTimerAsynchronously(plugin, 0L, DifficultyConfig.getDifficultyCheckDelay());
+        }.runTaskTimerAsynchronously(plugin, 0L, DifficultyConfig.getDelayBetweenChecks());
     }
 }
