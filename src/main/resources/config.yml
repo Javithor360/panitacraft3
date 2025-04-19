@@ -138,7 +138,7 @@ difficulty:
           weight: 0.2
     # Settings for the INDIVIDUAL difficulty component (DI), calculated per player
     # Each player’s stats and environment affect their individual score.
-    invididual:
+    individual:
       # These are the main stats taken from the player.
       # Each is normalized based on its min/max range and then multiplied by its weight.
       factors:
