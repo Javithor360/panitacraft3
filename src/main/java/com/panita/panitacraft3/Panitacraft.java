@@ -24,7 +24,7 @@ public final class Panitacraft extends JavaPlugin {
         Messenger.init(adventure);
 
         new ListenerRegistry(this, getConfig()).registerAll("com.panita.panitacraft3.listeners");
-        // new ListenerRegistry(this, getConfig()).registerAll("com.panita.panitacraft3.difficulty.listeners");
+        new ListenerRegistry(this, getConfig()).registerAll("com.panita.panitacraft3.difficulty.listeners");
 
         // Load configuration
         saveDefaultConfig();
