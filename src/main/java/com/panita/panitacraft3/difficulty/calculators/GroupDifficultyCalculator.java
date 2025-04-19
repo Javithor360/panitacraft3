@@ -39,6 +39,6 @@ public class GroupDifficultyCalculator {
 
         // Applies the following formula:
         // (Σ eachPlayerDI) / playersInRadius
-        return Math.min(total / players.size(), DifficultyService.FIXED_MAX_DIFFICULTY);
+        return Math.min(total / players.size(), DifficultyConfig.getMaxDifficultyScale());
     }
 }

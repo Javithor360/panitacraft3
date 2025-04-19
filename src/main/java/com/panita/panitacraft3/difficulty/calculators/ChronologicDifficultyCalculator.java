@@ -3,9 +3,6 @@ package com.panita.panitacraft3.difficulty.calculators;
 import com.panita.panitacraft3.difficulty.util.DifficultyConfig;
 import com.panita.panitacraft3.util.Global;
 import org.bukkit.Bukkit;
-import org.bukkit.Statistic;
-
-import static com.panita.panitacraft3.difficulty.DifficultyService.FIXED_MAX_DIFFICULTY;
 
 /**
  * ChronologicDifficultyCalculator is a utility class that calculates the global difficulty of the server
@@ -34,9 +31,9 @@ public class ChronologicDifficultyCalculator {
                         (onlinePlayersNorm * DifficultyConfig.getChronoOnlinePlayersWeight()) +
                         (totalLoadedChunks * DifficultyConfig.getChronoChunksWeight()) +
                         (globalEventPenalty * DifficultyConfig.getChronoEventsWeight())
-                ) * FIXED_MAX_DIFFICULTY;
+                ) * DifficultyConfig.getMaxDifficultyScale();
 
-        return Math.min(globalDifficulty, FIXED_MAX_DIFFICULTY); // Ensure difficulty does not exceed max difficulty
+        return Math.min(globalDifficulty, DifficultyConfig.getMaxDifficultyScale()); // Ensure difficulty does not exceed max difficulty
     }
 
     /**

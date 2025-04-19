@@ -1,7 +1,6 @@
 package com.panita.panitacraft3.chat.commands.panitacraft;
 
 import com.panita.panitacraft3.Panitacraft;
-import com.panita.panitacraft3.difficulty.DifficultyManager;
 import com.panita.panitacraft3.difficulty.DifficultyService;
 import com.panita.panitacraft3.difficulty.util.DifficultyConfig;
 import com.panita.panitacraft3.util.Global;

@@ -149,6 +149,7 @@ public class TraceCommand implements AdvancedCommand {
         double finalDifficulty = DifficultyService.getLocalDifficulty(player.getLocation());
         Messenger.send(player, "<gold>💥 DIFICULTAD FINAL</gold>");
         Messenger.send(player, " <gray>Fórmula:</gray> autogenerada * multiplicador manual");
+        Messenger.send(player, " <gray>Multiplicador manual:</gray> <aqua>x" + DifficultyConfig.getManualMultiplier() + "</aqua>");
         Messenger.send(player, " <green>Total:</green> <gradient:#ff5f6d:#ffc371>" + fmt(finalDifficulty) + "</gradient>");
         Messenger.send(player, "");
         Messenger.send(player, "<gray>=====================================================</gray>");

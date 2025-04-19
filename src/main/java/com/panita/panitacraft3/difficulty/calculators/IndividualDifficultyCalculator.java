@@ -1,11 +1,8 @@
 package com.panita.panitacraft3.difficulty.calculators;
 
-import com.panita.panitacraft3.difficulty.DifficultyProfile;
-import com.panita.panitacraft3.difficulty.DifficultyService;
 import com.panita.panitacraft3.difficulty.util.BiomeDanger;
 import com.panita.panitacraft3.difficulty.util.DifficultyConfig;
 import com.panita.panitacraft3.util.Global;
-import com.panita.panitacraft3.util.chat.Messenger;
 import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 
@@ -55,9 +52,9 @@ public class IndividualDifficultyCalculator {
                 (equipNorm * DifficultyConfig.getIndividualEquipmentWeight()) +
                 (levelNorm * DifficultyConfig.getIndividualXpWeight()) -
                 (deathNorm * DifficultyConfig.getIndividualDeathCountWeight())
-        ) * (biomeDanger * dimensionMultiplier) * DifficultyService.FIXED_MAX_DIFFICULTY;
+        ) * (biomeDanger * dimensionMultiplier) * DifficultyConfig.getMaxDifficultyScale();
 
-        return Math.min(individualDifficulty, DifficultyService.FIXED_MAX_DIFFICULTY); // Ensure difficulty is not negative
+        return Math.min(individualDifficulty, DifficultyConfig.getMaxDifficultyScale()); // Ensure difficulty is not negative
     }
 
     public static double getDimensionMultiplier(Player player) {
