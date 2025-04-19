@@ -3,6 +3,7 @@ package com.panita.panitacraft3.difficulty.calculators;
 import com.panita.panitacraft3.difficulty.DifficultyService;
 import com.panita.panitacraft3.difficulty.util.BiomeDanger;
 import com.panita.panitacraft3.util.Global;
+import com.panita.panitacraft3.util.chat.Messenger;
 import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 
@@ -60,8 +61,8 @@ public class IndividualDifficultyCalculator {
     public static double getDimensionMultiplier(Player player) {
         return switch (player.getWorld().getEnvironment()) {
             case NORMAL -> 1.0; // Overworld
-            case NETHER -> 1.5; // Nether
-            case THE_END -> 2.0; // End
+            case NETHER -> 1.75; // Nether
+            case THE_END -> 1.5; // End
             default -> 1.25; // Default multiplier for other dimensions
         };
     }
