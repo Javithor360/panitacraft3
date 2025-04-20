@@ -10,7 +10,7 @@ public interface MobModifier {
     double getMaxBoost();
     double getMinDifficulty();
     boolean canApply(LivingEntity entity);
-    void apply(LivingEntity entity, double difficulty, double boostRatio, DebugReport report);
+    double apply(LivingEntity entity, double difficulty, double boostRatio, DebugReport report);
 
     default double generateBoost(double difficulty) {
         return DifficultyCurveUtil.getBoostRatio(difficulty, getMaxBoost(), 4.5);
