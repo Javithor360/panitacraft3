@@ -86,9 +86,9 @@ public class KnockbackResistanceModifier implements MobModifier {
     }
 
     @Override
-    public void apply(LivingEntity entity, double difficulty, double boostRatio, DebugReport debugReport) {
+    public double apply(LivingEntity entity, double difficulty, double boostRatio, DebugReport debugReport) {
         AttributeInstance attr = entity.getAttribute(Attribute.KNOCKBACK_RESISTANCE);
-        if (attr == null) return;
+        if (attr == null) return 0;
 
         double base = DifficultyCurveUtil.ensureValidBaseValue(attr, 0.1);
         double newValue = DifficultyCurveUtil.getNumberFromRange(difficulty, 0, getMaxBoost());
@@ -97,5 +97,7 @@ public class KnockbackResistanceModifier implements MobModifier {
 
         attr.setBaseValue(newValue);
         debugReport.logModifier(this, base, newValue, weightCost);
+
+        return weightCost;
     }
 }

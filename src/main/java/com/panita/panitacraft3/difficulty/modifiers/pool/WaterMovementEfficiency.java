@@ -86,9 +86,9 @@ public class WaterMovementEfficiency implements MobModifier {
     }
 
     @Override
-    public void apply(LivingEntity entity, double difficulty, double boostRatio, DebugReport debugReport) {
+    public double apply(LivingEntity entity, double difficulty, double boostRatio, DebugReport debugReport) {
         AttributeInstance attr = entity.getAttribute(Attribute.WATER_MOVEMENT_EFFICIENCY);
-        if (attr == null) return;
+        if (attr == null) return 0;
 
         double base = DifficultyCurveUtil.ensureValidBaseValue(attr, 0.1);
         double multiplier = 1.0 + boostRatio;
@@ -98,5 +98,7 @@ public class WaterMovementEfficiency implements MobModifier {
 
         attr.setBaseValue(newValue);
         debugReport.logModifier(this, base, newValue, weightCost);
+
+        return weightCost;
     }
 }

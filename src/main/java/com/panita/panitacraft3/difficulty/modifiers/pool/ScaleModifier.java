@@ -85,9 +85,9 @@ public class ScaleModifier implements MobModifier {
     }
 
     @Override
-    public void apply(LivingEntity entity, double difficulty, double boostRatio, DebugReport debugReport) {
+    public double apply(LivingEntity entity, double difficulty, double boostRatio, DebugReport debugReport) {
         AttributeInstance attr = entity.getAttribute(Attribute.SCALE);
-        if (attr == null) return;
+        if (attr == null) return 0;
 
         double base = DifficultyCurveUtil.ensureValidBaseValue(attr, 1.0);
         double newScale = DifficultyCurveUtil.getNumberFromRange(difficulty, 0.5, 1.75);
@@ -97,5 +97,7 @@ public class ScaleModifier implements MobModifier {
 
         attr.setBaseValue(newScale);
         debugReport.logModifier(this, base, newScale, weightCost);
+
+        return weightCost;
     }
 }

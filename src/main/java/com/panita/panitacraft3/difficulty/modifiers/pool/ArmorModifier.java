@@ -87,9 +87,9 @@ public class ArmorModifier implements MobModifier {
     }
 
     @Override
-    public void apply(LivingEntity entity, double difficulty, double boostRatio, DebugReport debugReport) {
+    public double apply(LivingEntity entity, double difficulty, double boostRatio, DebugReport debugReport) {
         AttributeInstance attr = entity.getAttribute(Attribute.ARMOR);
-        if (attr == null) return;
+        if (attr == null) return 0;
 
         double base = DifficultyCurveUtil.ensureValidBaseValue(attr, 1.0);
         double multiplier = 1.0 + boostRatio;
@@ -99,5 +99,7 @@ public class ArmorModifier implements MobModifier {
 
         attr.setBaseValue(newValue);
         debugReport.logModifier(this, base, newValue, weightCost);
+
+        return weightCost;
     }
 }
