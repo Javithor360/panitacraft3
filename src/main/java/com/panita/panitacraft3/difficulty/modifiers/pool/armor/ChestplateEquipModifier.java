@@ -11,7 +11,7 @@ public class ChestplateEquipModifier extends BaseArmorEquipModifier {
     public ChestplateEquipModifier() {
         super(
                 ArmorSlot.CHESTPLATE,
-                25.0,
+                26.0,
                 50.0,
                 "CHESTPLATE_EQUIP"
         );

@@ -11,7 +11,7 @@ public class LeggingsEquipModifier extends BaseArmorEquipModifier {
     public LeggingsEquipModifier() {
         super(
                 ArmorSlot.LEGGINGS,
-                24.0,
+                25.0,
                 50.0,
                 "LEGGINGS_EQUIP"
         );

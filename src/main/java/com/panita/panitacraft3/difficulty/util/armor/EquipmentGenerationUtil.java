@@ -25,7 +25,7 @@ public class EquipmentGenerationUtil {
         List<ArmorPiece> available = ArmorPieceRegistry.getAvailablePieces(slot, norm);
         if (available.isEmpty()) return null;
 
-        double exponent = 2.5 - (norm * 2.0);
+        double exponent = 3.0 - (Math.pow(norm, 1.5) * 3.0);
         double roll = Math.pow(RANDOM.nextDouble(), exponent);
         int index = Math.min((int) Math.floor(roll * available.size()), available.size() - 1);
 
