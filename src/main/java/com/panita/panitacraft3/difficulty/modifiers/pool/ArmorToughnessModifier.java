@@ -11,12 +11,12 @@ import org.bukkit.entity.LivingEntity;
 import java.util.Set;
 
 /**
- * This class modifies the maximum health of certain mobs based on the difficulty level.
+ * This modifier class alters the armor toughness of certain mobs based on the difficulty level.
  */
-public class MaxHealthModifier implements MobModifier {
+public class ArmorToughnessModifier implements MobModifier {
     /**
      * A set of entity types that this modifier can be applied to.
-     * These are the entities that will have their max health modified.
+     * These are the entities that will have their armor toughness modified.
      */
     private static final Set<EntityType> APPLICABLE_ENTITIES = Set.of(
             EntityType.ZOMBIE,
@@ -45,32 +45,33 @@ public class MaxHealthModifier implements MobModifier {
 
     @Override
     public String getName() {
-        return "MAX_HEALTH";
+        return "ARMOR_TOUGHNESS";
     }
 
     @Override
     public double getBaseWeight() {
-        return 15;
+        return 9;
     }
 
     @Override
     public double getMaxBoost() {
-        return 2;
+        return 5;
     }
 
     @Override
     public double getMinDifficulty() {
-        return 35;
+        return 25;
     }
 
     @Override
     public boolean canApply(LivingEntity entity) {
-        return DifficultyCurveUtil.isApplicableEntity(entity, APPLICABLE_ENTITIES, Attribute.MAX_HEALTH);
+        return APPLICABLE_ENTITIES.contains(entity.getType()) &&
+                DifficultyCurveUtil.ensureAttributeExists(entity, Attribute.ARMOR_TOUGHNESS, 1.0);
     }
 
     @Override
     public void apply(LivingEntity entity, double difficulty, double boostRatio, DebugReport debugReport) {
-        AttributeInstance attr = entity.getAttribute(Attribute.MAX_HEALTH);
+        AttributeInstance attr = entity.getAttribute(Attribute.ARMOR_TOUGHNESS);
         if (attr == null) return;
 
         double base = DifficultyCurveUtil.ensureValidBaseValue(attr, 1.0);
@@ -80,7 +81,6 @@ public class MaxHealthModifier implements MobModifier {
         double weightCost = DifficultyCurveUtil.getSafeWeightCost(base, newValue, getBaseWeight(), boostRatio, getMaxBoost());
 
         attr.setBaseValue(newValue);
-        entity.setHealth(newValue);
         debugReport.logModifier(this, base, newValue, weightCost);
     }
 }
