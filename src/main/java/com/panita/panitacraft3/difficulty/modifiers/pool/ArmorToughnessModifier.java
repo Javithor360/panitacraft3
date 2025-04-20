@@ -14,26 +14,42 @@ import java.util.Set;
  * This modifier class alters the armor toughness of certain mobs based on the difficulty level.
  */
 public class ArmorToughnessModifier implements MobModifier {
-    /**
-     * A set of entity types that this modifier can be applied to.
-     * These are the entities that will have their armor toughness modified.
-     */
+    // A set of entity types that this modifier can be applied to.
     private static final Set<EntityType> APPLICABLE_ENTITIES = Set.of(
             EntityType.ZOMBIE,
             EntityType.HUSK,
-            EntityType.ZOMBIE_VILLAGER,
             EntityType.DROWNED,
+            EntityType.ZOMBIE_VILLAGER,
+            EntityType.ZOMBIFIED_PIGLIN,
+            EntityType.PIGLIN,
+            EntityType.CAVE_SPIDER,
+            EntityType.ENDERMAN,
+            EntityType.IRON_GOLEM,
+            EntityType.POLAR_BEAR,
+            EntityType.SPIDER,
+            EntityType.BLAZE,
+            EntityType.BOGGED,
+            EntityType.BREEZE,
+            EntityType.CREAKING,
+            EntityType.ELDER_GUARDIAN,
+            EntityType.ENDERMITE,
+            EntityType.GUARDIAN,
+            EntityType.HOGLIN,
+            EntityType.SHULKER,
+            EntityType.SILVERFISH,
+            EntityType.WARDEN,
+            EntityType.ZOGLIN,
+            EntityType.GIANT,
+            EntityType.SKELETON_HORSE,
+            EntityType.ZOMBIE_HORSE,
             EntityType.SKELETON,
             EntityType.STRAY,
             EntityType.CREEPER,
-            EntityType.SPIDER,
-            EntityType.ENDERMAN,
             EntityType.WITCH,
             EntityType.PHANTOM,
             EntityType.SLIME,
             EntityType.MAGMA_CUBE,
             EntityType.GHAST,
-            EntityType.BLAZE,
             EntityType.WITHER_SKELETON,
             EntityType.ILLUSIONER,
             EntityType.PILLAGER,
