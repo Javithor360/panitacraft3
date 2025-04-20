@@ -2,6 +2,7 @@ package com.panita.panitacraft3.difficulty.modifiers.pool;
 
 import com.panita.panitacraft3.difficulty.debug.DebugReport;
 import com.panita.panitacraft3.difficulty.modifiers.MobModifier;
+import com.panita.panitacraft3.difficulty.util.DifficultyConfig;
 import com.panita.panitacraft3.difficulty.util.DifficultyCurveUtil;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -90,7 +91,10 @@ public class ScaleModifier implements MobModifier {
         if (attr == null) return 0;
 
         double base = DifficultyCurveUtil.ensureValidBaseValue(attr, 1.0);
-        double newScale = DifficultyCurveUtil.getNumberFromRange(difficulty, 0.5, 1.75);
+        double normDiff = Math.min(difficulty / DifficultyConfig.getMaxDifficultyScale(), 1.0);
+        double minScale = normDiff > 0.75 ? 0.5 : 0.8;
+        double maxScale = normDiff > 0.75 ? 1.75 : normDiff > 0.5 ? 1.5 : 1.25;
+        double newScale = DifficultyCurveUtil.getNumberFromRange(difficulty, minScale, maxScale);
 
         double relativeBoost = Math.abs(newScale - 1.0);
         double weightCost = DifficultyCurveUtil.getSafeWeightCost(base, newScale, getBaseWeight(), relativeBoost, getMaxBoost());
