@@ -151,9 +151,7 @@ public class DifficultyCurveUtil {
      * @param difficulty The difficulty value to normalize.
      * @return The generated scale value.
      */
-    public static double getScaleValue(double difficulty) {
-        double min = 0.5;
-        double max = 1.75;
+    public static double getNumberFromRange(double difficulty, double min, double max) {
         double norm = normalize(difficulty);
         double exponent = Math.exp(5.0 * (1.0 - norm));
         double skewed = 1.0 - Math.pow(Math.random(), exponent);

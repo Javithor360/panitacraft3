@@ -1,10 +1,7 @@
 package com.panita.panitacraft3.difficulty.modifiers;
 
 import com.panita.panitacraft3.difficulty.debug.DebugReport;
-import com.panita.panitacraft3.difficulty.modifiers.pool.ArmorModifier;
-import com.panita.panitacraft3.difficulty.modifiers.pool.ArmorToughnessModifier;
-import com.panita.panitacraft3.difficulty.modifiers.pool.MaxHealthModifier;
-import com.panita.panitacraft3.difficulty.modifiers.pool.ScaleModifier;
+import com.panita.panitacraft3.difficulty.modifiers.pool.*;
 import com.panita.panitacraft3.difficulty.util.DifficultyConfig;
 import org.bukkit.entity.LivingEntity;
 
@@ -16,8 +13,17 @@ public class MobModifierPool {
     private static final List<MobModifier> MODIFIERS = List.of(
             new ArmorModifier(),
             new ArmorToughnessModifier(),
+            new AttackDamageModifier(),
+            new AttackKnockbackModifier(),
+            new FollowRangeModifier(),
+            new KnockbackResistanceModifier(),
+            new MovementSpeedModifier(),
             new MaxHealthModifier(),
-            new ScaleModifier()
+            new OxygenBonusModifier(),
+            new SafeFallDistanceModifier(),
+            new StepHeightModifier(),
+            new ScaleModifier(),
+            new WaterMovementEfficiency()
     );
 
     public static void applyModifiers(LivingEntity entity, double difficulty) {

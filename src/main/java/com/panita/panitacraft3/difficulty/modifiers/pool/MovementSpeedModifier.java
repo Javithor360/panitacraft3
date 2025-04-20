@@ -11,9 +11,9 @@ import org.bukkit.entity.LivingEntity;
 import java.util.Set;
 
 /**
- * This class modifies the maximum health of certain mobs based on the difficulty level.
+ * This class modifies the movement speed of certain mobs based on the difficulty level.
  */
-public class ScaleModifier implements MobModifier {
+public class MovementSpeedModifier implements MobModifier {
     // A set of entity types that this modifier can be applied to.
     private static final Set<EntityType> APPLICABLE_ENTITIES = Set.of(
             EntityType.ZOMBIE,
@@ -61,41 +61,41 @@ public class ScaleModifier implements MobModifier {
 
     @Override
     public String getName() {
-        return "SCALE";
+        return "MOVEMENT_SPEED";
     }
 
     @Override
     public double getBaseWeight() {
-        return 21;
+        return 15;
     }
 
     @Override
     public double getMaxBoost() {
-        return 0.75;
+        return 0.8; // Not used here
     }
 
     @Override
     public double getMinDifficulty() {
-        return 100;
+        return 110;
     }
 
     @Override
     public boolean canApply(LivingEntity entity) {
-        return DifficultyCurveUtil.isApplicableEntity(entity, APPLICABLE_ENTITIES, Attribute.SCALE);
+        return APPLICABLE_ENTITIES.contains(entity.getType()) &&
+                DifficultyCurveUtil.ensureAttributeExists(entity, Attribute.MOVEMENT_SPEED, 0.1);
     }
 
     @Override
     public void apply(LivingEntity entity, double difficulty, double boostRatio, DebugReport debugReport) {
-        AttributeInstance attr = entity.getAttribute(Attribute.SCALE);
+        AttributeInstance attr = entity.getAttribute(Attribute.MOVEMENT_SPEED);
         if (attr == null) return;
 
-        double base = DifficultyCurveUtil.ensureValidBaseValue(attr, 1.0);
-        double newScale = DifficultyCurveUtil.getNumberFromRange(difficulty, 0.5, 1.75);
+        double base = DifficultyCurveUtil.ensureValidBaseValue(attr, 0.1);
+        double newValue = DifficultyCurveUtil.getNumberFromRange(difficulty, base, base * 2);
 
-        double relativeBoost = Math.abs(newScale - 1.0);
-        double weightCost = DifficultyCurveUtil.getSafeWeightCost(base, newScale, getBaseWeight(), relativeBoost, getMaxBoost());
+        double weightCost = DifficultyCurveUtil.getSafeWeightCost(base, newValue, getBaseWeight(), boostRatio, getMaxBoost());
 
-        attr.setBaseValue(newScale);
-        debugReport.logModifier(this, base, newScale, weightCost);
+        attr.setBaseValue(newValue);
+        debugReport.logModifier(this, base, newValue, weightCost);
     }
 }
