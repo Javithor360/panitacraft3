@@ -48,19 +48,6 @@ public class MobModifierPool {
 
         Collections.shuffle(applicable);
 
-//        for (MobModifier mod : applicable) {
-//            double boost = mod.generateBoost(difficulty);
-//            if (boost <= 0.0) continue;
-//
-//            double cost = mod.getBaseWeight() * (1.0 + (boost / mod.getMaxBoost()));
-//            if (cost <= 0) continue;
-//
-//            if (weightBudget >= cost) {
-//                mod.apply(entity, difficulty, boost, debugReport);
-//                weightBudget -= cost;
-//            }
-//        }
-
         for (MobModifier mod : applicable) {
             if (weightBudget < mod.getBaseWeight()) continue;
 
