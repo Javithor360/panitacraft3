@@ -21,3 +21,7 @@ events:
   playerQuit:
     enabled: true
     broadcastMessage: "<#393341><#9E73DE>%PLAYER%</#9E73DE> left the server</#393341><reset>"
+
+  playerResurrect:
+    enabled: true
+    broadcastMessage: "<gray>¡<aqua>%PLAYER%</aqua> ha utilizado un <#f1c40f>Tótem de Inmortalidad</#f1c40f>!</gray><reset>"
